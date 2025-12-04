@@ -10,6 +10,8 @@ class Main {
 		
 		boolean exit = false;
 		char l;
+		Round redondeo = new Round();
+		redondeo.decimal = 2;
 		
 		while(!exit) {
 			
@@ -17,9 +19,12 @@ class Main {
 			System.out.println("B-Esfera");
 			System.out.println("C-Cuadrado");
 			System.out.println("D-Cubo");
-			System.out.println("E-Salir");
+			System.out.println("E-Cambiar el numero de decimales");
+			System.out.println("F-Salir");
 			System.out.print("Escriba la opcion a la que quieras acceder: ");
 			l = KB.nextLine().charAt(0);
+			if(l=='A' || l=='B' || l=='C' || l=='D' || l=='E' || l=='F')
+				l +=32;
 			
 			switch(l) {
 			
@@ -28,11 +33,10 @@ class Main {
 					Circle circulo = new Circle();					
 					System.out.print("Introduce el radio del circulo: ");
 					circulo.radius = KB.nextDouble();
-					KB.nextLine();
 					System.out.println("Perimetro del circulo de radio "+circulo.radius+
-							"cm: "+circulo.perimeter()+"cm2");
+							"cm: "+redondeo.rounder(circulo.perimeter())+"cm2");
 					System.out.println("Area del circulo de radio "+circulo.radius+
-										"cm: "+ circulo.area()+"cm3");
+										"cm: "+redondeo.rounder(circulo.area())+"cm3");
 					System.out.println();
 					break;
 					
@@ -41,11 +45,10 @@ class Main {
 					Sphere esfera = new Sphere();
 					System.out.print("Introduce el radio de la esfera: ");
 					esfera.radius = KB.nextDouble();
-					KB.nextLine();
 					System.out.println("La superficie de una esfera de radio "+esfera.radius+
-										"cm: "+esfera.surface()+"cm2");
+										"cm: "+redondeo.rounder(esfera.surface())+"cm2");
 					System.out.println("El volumen de una esfera de radio "+esfera.radius+
-										"cm: "+esfera.volume()+"cm3");
+										"cm: "+redondeo.rounder(esfera.volume())+"cm3");
 					System.out.println();
 					break;
 					
@@ -54,11 +57,10 @@ class Main {
 					Square cuadrado = new Square();
 					System.out.print("Introduce la longitud del lado del cuadrado: ");
 					cuadrado.side = KB.nextDouble();
-					KB.nextLine();
 					System.out.println("El perimetro de un cuadrado de lado "+cuadrado.side+
-										"cm: "+cuadrado.perimeter()+"cm2");
+										"cm: "+redondeo.rounder(cuadrado.perimeter())+"cm2");
 					System.out.println("El area de un cuadrado de lado "+cuadrado.side+
-										"cm: "+cuadrado.area()+"cm3");
+										"cm: "+redondeo.rounder(cuadrado.area())+"cm3");
 					System.out.println();
 					break;
 					
@@ -67,15 +69,26 @@ class Main {
 					Cube cubo = new Cube();
 					System.out.print("Introduce la longitud del lado del cubo: ");
 					cubo.side = KB.nextDouble();
-					KB.nextLine();
 					System.out.println("La superficie de un cubo de lado "+cubo.side+
-										"cm: "+cubo.surface()+"cm2");
+										"cm: "+redondeo.rounder(cubo.surface())+"cm2");
 					System.out.println("El volumen de un cubo de lado "+cubo.side+
-										"cm: "+cubo.volume()+"cm3");
+										"cm: "+redondeo.rounder(cubo.volume())+"cm3");
 					System.out.println();
 					break;
 					
 				case 'e':
+					
+					System.out.println("Introduce el numero de decimales con los que quieras redondear");
+					redondeo.decimal = KB.nextInt();
+					while(redondeo.decimal<0) {
+						System.err.println("ERROR. El numero introducido no puede ser negativo");
+						System.out.print("Intentalo de nuevo: ");
+						redondeo.decimal = KB.nextInt();
+					}
+					System.out.println();
+					break;
+					
+				case 'f':
 					System.err.println("FINALIZANDO PROGRAMA. Hasta luego.");
 					exit = true;
 					break;
@@ -83,6 +96,8 @@ class Main {
 					System.out.println();
 					System.err.println("ERROR. Esa opcion no esta disponible. Intentelo de nuevo.");
 			}
+			if(l=='a' || l=='b' || l=='c' || l=='d' || l=='e')
+				KB.nextLine();
 			
 		}
 	}
