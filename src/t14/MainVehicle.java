@@ -7,7 +7,8 @@ class MainVehicle {
 	public static void main(String[] args) {
 		
 		Scanner KB = new Scanner(System.in);
-
+		t12.Round redondeo = new t12.Round(2);
+		
 		Vehicle vehiculo = new Vehicle();
 
 		System.out.print("Cuantos puntos tiene tu recorrido: ");
@@ -22,9 +23,9 @@ class MainVehicle {
 			System.out.println("Punto "+i);
 			punto[i] = new Point();
 		}
-		
+		System.out.println("Distancia recorrida: "+redondeo.rounder(vehiculo.route(punto)) +"km");
 		System.out.println("El coste total de la ruta es de: "
-				+(vehiculo.cost*vehiculo.route(punto))+"€");
+				+redondeo.rounder(vehiculo.total)+"€");
 	}
 	
 }

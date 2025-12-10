@@ -10,8 +10,7 @@ class Main {
 		
 		boolean exit = false;
 		char l;
-		Round redondeo = new Round();
-		redondeo.decimal = 2;
+		Round redondeo = new Round(2);
 		
 		while(!exit) {
 			
@@ -79,11 +78,11 @@ class Main {
 				case 'e':
 					
 					System.out.println("Introduce el numero de decimales con los que quieras redondear");
-					redondeo.decimal = KB.nextInt();
-					while(redondeo.decimal<0) {
+					redondeo.setDecimal(KB.nextInt()); 
+					while(redondeo.getDecimal()<0) {
 						System.err.println("ERROR. El numero introducido no puede ser negativo");
 						System.out.print("Intentalo de nuevo: ");
-						redondeo.decimal = KB.nextInt();
+						redondeo.setDecimal(KB.nextInt());
 					}
 					System.out.println();
 					break;
