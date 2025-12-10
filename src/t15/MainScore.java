@@ -23,7 +23,7 @@ public class MainScore {
 				case 1 -> {
 					System.out.print("Introduce el instrumento principal nuevo: ");
 					String instrument = KB.nextLine();
-					partitura.setInstrument(instrument);
+					partitura.setMainInstrument(instrument);
 				}
 				case 2 -> {
 					System.out.print("Introduce el instrumento que quieras añadir: ");

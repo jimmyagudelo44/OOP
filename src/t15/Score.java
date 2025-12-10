@@ -34,6 +34,23 @@ public class Score {
 		this.instrument = instrument;
 	}
 	
+	/**
+	 * 
+	 * @param mainInstrument nuevo instrumento principal que ira el primero de todos en la lista
+	 */
+	void setMainInstrument(String mainInstrument) {
+		boolean coma = false;
+		String otherInstruments = "";
+		for(int i = 0 ; i<instrument.length() ; i++) {
+			if(instrument.charAt(i)==',')
+				coma = true;
+			if(coma)
+				otherInstruments += instrument.charAt(i);
+		}
+		mainInstrument += otherInstruments;
+		instrument = mainInstrument;
+	}
+	
 	int getTempo() {
 		return tempo;
 	}
