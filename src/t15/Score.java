@@ -5,17 +5,27 @@ public class Score {
 	java.util.Scanner KB = new java.util.Scanner(System.in);
 	
 	private String author;
-	private String instrument;
+	private String[] instrument;
 	private int tempo;
 	
 	Score(){
 		System.out.print("Introduce el nombre del autor: ");
 		author = KB.nextLine();
-		System.out.print("Introduce el instrumento: ");
-		instrument = KB.nextLine();
 		System.out.print("Introduce el tempo (pulsaciones/minuto): ");
 		while((tempo = KB.nextInt())<0)
 			System.err.println("ERROR. El tempo no puede ser negativo. Intentalo de nuevo");
+		System.out.print("Introduce los instrumentos que vas a meter: ");
+		int cap;
+		while((cap = KB.nextInt())<1)
+			System.err.println("ERROR. El numero de instrumentos tiene que ser 1 al menos. "
+					+ "Intentalo de nuevo");
+		KB.nextLine();
+		instrument = new String[cap];
+		System.out.println("Ahora introduce los instrumentos");
+		for(int i = 0 ; i<cap ; i++) {
+			System.out.print(i+"º: ");
+			instrument[i] = KB.nextLine();
+		}
 	}
 	
 	String getAuthor() {
@@ -26,12 +36,34 @@ public class Score {
 		this.author = author;
 	}
 	
-	String getInstrument() {
-		return instrument;
+	String getOneInstrument(int position) {
+		return instrument[position];
 	}
 	
-	void setInstrument(String instrument) {
-		this.instrument = instrument;
+	String getAllInstruments() {
+		String total = "";
+		for(int i = 0 ; i<instrument.length ; i++)
+			if(i!=instrument.length-1)
+				total += instrument[i]+", ";
+			else
+				total += instrument[i];
+		return total;
+	}
+	
+	void setOneInstrument(int position, String instrument) {
+		this.instrument[position] = instrument;
+	}
+	
+	void setAllInstrument() {
+		System.out.print("Introduce el numero de instrumentos que vas a meter: ");
+		int cap;
+		while((cap = KB.nextInt())<1)
+			System.err.println("ERROR. Tienes que meter al menos 1");
+		instrument = new String[cap];
+		for(int i = 0 ; i<cap ; i++) {
+			System.out.print(i+"º: ");
+			instrument[i] = KB.nextLine();
+		}
 	}
 	
 	/**
@@ -39,16 +71,7 @@ public class Score {
 	 * @param mainInstrument nuevo instrumento principal que ira el primero de todos en la lista
 	 */
 	void setMainInstrument(String mainInstrument) {
-		boolean coma = false;
-		String otherInstruments = "";
-		for(int i = 0 ; i<instrument.length() ; i++) {
-			if(instrument.charAt(i)==',')
-				coma = true;
-			if(coma)
-				otherInstruments += instrument.charAt(i);
-		}
-		mainInstrument += otherInstruments;
-		instrument = mainInstrument;
+		instrument[0] = mainInstrument;
 	}
 	
 	int getTempo() {
@@ -78,7 +101,13 @@ public class Score {
 	 * @return concatenacion de los atributos de Score
 	 */
 	String scoreToString() {
-		return "Autor: "+author+". Instrumentos: "+instrument+". Tempo: "+tempo;
+		String total = "";
+		for(int i = 0 ; i<instrument.length ; i++)
+			if(i!=instrument.length-1)
+				total += instrument[i]+", ";
+			else
+				total += instrument[i];
+		return "Autor: "+author+". Instrumentos: "+total+". Tempo: "+tempo;
 	}
 	
 	/**
@@ -86,15 +115,17 @@ public class Score {
 	 * @param instrument
 	 */
 	void addInstrument(String instrument) {
-		this.instrument += ", "+instrument;
+		String[] aux = new String[this.instrument.length];
+		for(int i = 0 ; i<aux.length ; i++)
+			aux[i] = this.instrument[i];
+		this.instrument = new String[aux.length+1];
+		for(int i = 0 ; i<aux.length ; i++)
+			this.instrument[i] = aux[i];
+		this.instrument[this.instrument.length-1] = instrument;
 	}
 	
 	int counterInstrument() {
-		int counter = 1;
-		for(int i = 0 ; i<instrument.length() ; i++)
-			if(instrument.charAt(i)==',')
-				counter++;
-		return counter;
+		return instrument.length;
 	}
 
 }
