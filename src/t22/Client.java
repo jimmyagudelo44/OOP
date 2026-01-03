@@ -69,7 +69,7 @@ class Client {
 		boolean found = false;
 		for(int i = 0 ; i<purchases.length ; i++)
 			if(purchases[i].getCode()!=-1) {
-				total += purchases[i].orderToString()+" || ";
+				total += purchases[i].orderToStringNoClients()+" || ";
 				found = true;
 			}
 		if(found)
