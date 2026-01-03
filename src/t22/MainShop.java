@@ -8,8 +8,12 @@ class MainShop {
 		
 		boolean exit = false;
 		
-		Order[] purchases = new Order[100];
-		Client[] costumers = new Client[100];
+		int quantity = 100;
+		
+		boolean[] discountApplied = new boolean[quantity];
+		Order[] purchases = new Order[quantity];
+		Client[] costumers = new Client[quantity];
+		int[] counterTotalOrders = new int[quantity];
 		
 		int counterCostumers = 0;
 		int counterPurchases = 0;
@@ -22,7 +26,8 @@ class MainShop {
 				System.out.println("3. Insertar pedido a un determinado cliente");
 				System.out.println("4. Mostrar clientes con mas pedidos");
 				System.out.println("5. Mostrar pago para cliente");
-				System.out.println("6. Numero de compras de un productos");
+				System.out.println("6. Solicitar descuento (para productos que han comprado"
+						+ " mas de 10 clientes)");
 				System.out.println("7. Mostrar todos los clientes");
 				System.out.println("8. Mostrar todos los pedidos");
 			}
@@ -45,6 +50,8 @@ class MainShop {
 					String description = KB.nextLine();
 					System.out.print("Introduce el precio del pedido: ");
 					Double price = KB.nextDouble();
+					counterTotalOrders[counterPurchases] = 0;
+					discountApplied[counterPurchases] = false;
 					purchases[counterPurchases++] = new Order(description, price, codeGenerator++);
 				}
 				case 3->{
@@ -91,7 +98,8 @@ class MainShop {
 								if(costumers[costumerSelected].purchaseAt(i).getCode()
 										== -1) {
 									found = true;
-									costumers[costumerSelected].setPurchaseAt(i, purchases[purchaseSelected]); 
+									costumers[costumerSelected].setPurchaseAt(i, purchases[purchaseSelected]);
+									counterTotalOrders[purchaseSelected]++;
 								}
 						}
 						else 
@@ -155,6 +163,37 @@ class MainShop {
 				case 7->{
 					for(int i = 0 ; i<counterCostumers ; i++)
 						System.out.println(costumers[i].clientToString());
+				}
+				case 6->{
+					boolean found = false;
+					int purchaseSelected = -1;
+					while(!found) {
+						System.out.print("Introduce el codigo del producto al que le quieras"
+								+ " aplicar un descuento: ");
+						int code = KB.nextInt();
+						for(int i = 0 ; i<counterPurchases ; i++)
+							 if(purchases[i].getCode() == code) {
+								found = true;
+								purchaseSelected = i;
+							 }
+						if(!found)
+							System.err.println("ERROR. No hay ningun producto con ese codigo. "
+									+ "Intentalo de nuevo");
+					}
+					int ordersNeeded = 10;
+					double discount = 50;
+					if(counterTotalOrders[purchaseSelected] >= ordersNeeded 
+							&& !discountApplied[purchaseSelected]) {
+						System.out.println("El producto ha sido vendido a 10 o mas clientes. "
+								+ "Aplicando descuento");
+						purchases[purchaseSelected].discount(discount);
+						discountApplied[purchaseSelected] = true;
+					}
+					else if (counterTotalOrders[purchaseSelected] < ordersNeeded)
+						System.err.println("El producto no ha sido vendido a mas de 10 "
+								+ "clientes. Intentelo mas tarde");
+					else
+						System.err.println("El descuento ya ha sido aplicado anteriormente");
 				}
 				case 8->{
 					for(int i = 0 ; i<counterPurchases ; i++)

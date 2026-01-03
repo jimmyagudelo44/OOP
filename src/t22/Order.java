@@ -53,7 +53,7 @@ class Order {
 	}
 	
 	String orderToString() {
-		return description+", "+price+"€, "+code;
+		return description+", "+price+"€, codigo: "+code;
 	}
 	
 	
