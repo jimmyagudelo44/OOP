@@ -1,0 +1,42 @@
+package t23;
+
+class Item {
+	private int code;
+	private String name;
+	private double price;
+
+	Item(int code, String name, double price){
+		this.code = code;
+		this.name = name;
+		this.price = price;
+	}
+	
+	void setCode(int code) {
+		this.code = code;
+	}
+	
+	int getCode() {
+		return code;
+	}
+
+	String getName() {
+		return name;
+	}
+
+	void setName(String name) {
+		this.name = name;
+	}
+
+	double getPrice() {
+		return price;
+	}
+
+	void setPrice(double price) {
+		this.price = price;
+	}
+	
+	String itemToString() {
+		return "codigo: "+code+", nombre: "+name+", precio: "+price+"€";
+	}
+	
+}
