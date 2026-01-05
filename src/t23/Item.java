@@ -4,7 +4,8 @@ class Item {
 	private int code;
 	private String name;
 	private double price;
-
+	static double tax;
+	
 	Item(int code, String name, double price){
 		this.code = code;
 		this.name = name;
@@ -34,9 +35,13 @@ class Item {
 	void setPrice(double price) {
 		this.price = price;
 	}
+
+	public String toString() {
+		return "Item [code=" + code + ", name=" + name + ", price=" + price + "]";
+	}
 	
-	String itemToString() {
-		return "codigo: "+code+", nombre: "+name+", precio: "+price+"€";
+	double cost() {
+		return price+(price*(tax/100));
 	}
 	
 }

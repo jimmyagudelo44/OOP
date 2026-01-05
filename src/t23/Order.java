@@ -1,5 +1,7 @@
 package t23;
 
+import java.util.Arrays;
+
 class Order {
 	private int code;
 	private String description;
@@ -59,29 +61,27 @@ class Order {
 			product[i] = aux[i];
 	}
 	
-	String orderToString() {
-		String total = "";
-		for(int i = 0 ; i<product.length ; i++)
-			total += product[i].getName()+" || ";
-		return "codigo: "+code+", descripcion: "+description+", productos: "+total;
-	}
-	
 	Item getItemAt(int position) {
 		return product[position];
 	}
 	
-	double totalCost(double tax) {
+	double totalCost() {
 		double total = 0;
 		for(int i = 0 ; i<product.length ; i++)
-			total += product[i].getPrice()+(product[i].getPrice()*(tax/100));
+			total += product[i].cost();
 		return total;
 	}
 	
 	String allItemsToString() {
 		String total = "";
 		for(int i = 0 ; i<product.length ; i++)
-			total += product[i].itemToString()+" \\";
+			total += product[i]+" \\ ";
 		return total;
+	}
+	
+	public String toString() {
+		return "Order [codigo=" + code + ", descripcion=" + description
+				+ ", productos=" + product.length + "]";
 	}
 	
 }

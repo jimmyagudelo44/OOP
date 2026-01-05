@@ -1,5 +1,7 @@
 package t23;
 
+import java.util.Arrays;
+
 class Client {
 	
 	private String id;
@@ -68,15 +70,43 @@ class Client {
 	String allOrdersToString() {
 		String total = "";
 		for(int i = 0 ; i<purchase.length ; i++)
-			total += purchase[i].orderToString()+" -- ";
+			total += purchase[i]+" -- ";
 		return total;
 	}
 	
-	String clientToString() {
-		String total = "";
-		for(int i = 0 ; i<purchase.length ; i++)
-			total += "-- "+purchase[i].orderToString()+" --";
-		return "Nombre: "+name+", DNI: "+id+", pedidos: "+total;
+	public String toString() {
+		return "Client [DNI=" + id + ", nombre=" + name + ", pedidos=" + purchase.length + "]";
+	}
+
+	boolean searchForOrder(int code) {
+		boolean found = false;
+		for(int i = 0 ; i<purchase.length && !found ; i++)
+			if(purchase[i].getCode() == code)
+				found = true;
+		return found;
+	}
+	
+	Order getOrderbyCode(int code) {
+		boolean found = false;
+		int orderSelected = 0;
+		for(int i = 0 ; i<purchase.length && !found ; i++)
+			if(purchase[i].getCode() == code) {
+				found = true;
+				orderSelected = i;
+			}
+		return purchase[orderSelected];
+	}
+	
+	Order getOrderbyItemCode(int code) {
+		boolean found = false;
+		int orderSelected = 0;
+		for(int i = 0 ; i<purchase.length && !found ; i++)
+			for(int c = 0 ; c<purchase[i].getProduct().length && !found ; c++)
+				if(purchase[i].getProduct()[c].getCode() == code) {
+					orderSelected = i;
+					found = true;
+				}
+		return purchase[orderSelected];
 	}
 	
 	boolean searchForItem(int code) {
@@ -88,10 +118,10 @@ class Client {
 		return found;
 	}
 	
-	double bill(double tax) {
+	double bill() {
 		double total = 0;
 		for(int i = 0 ; i<purchase.length ; i++)
-			total += purchase[i].totalCost(tax);
+			total += purchase[i].totalCost();
 		return total;
 	}
 	

@@ -8,7 +8,7 @@ class MainStore {
 		
 		Client[] costumer = new Client[50];
 		int counterCostumer = 0;
-		int tax = 10;
+		Item.tax = 10;
 		Item[] alpha = new Item[0];
 		Order[] beta = new Order[0];
 		int codeItem = 0;
@@ -36,7 +36,7 @@ class MainStore {
 			switch(option) {
 				case 1->{
 					System.out.print("Introduce el nuevo IVA: ");
-					tax = KB.nextInt();
+					Item.tax = KB.nextDouble();
 				}
 				case 2->{
 					System.out.print("Introduce el nombre del cliente: ");
@@ -48,23 +48,20 @@ class MainStore {
 				case 3->{
 					System.out.print("Introduce la descripcion del pedido: ");
 					String description = KB.nextLine();
-					Order newPurchase = new Order(codeOrder++, description, alpha);
 					boolean found = false;
-					int costumerSelected = 0;
 					while(!found) {
 						System.out.print("Introduce el DNI del cliente al "
 								+ "que le quieras añadir el pedido: ");
 						String id = KB.nextLine();
 						for(int i = 0 ; i<counterCostumer && !found ; i++)
 							if(costumer[i].getId().contains(id)) {
-								costumerSelected = i;
+								costumer[i].addOrder(new Order(codeOrder++, description, alpha));
 								found = true;
 							}
 						if(!found)
 							System.err.println("ERROR. No existe ningun cliente con "
 									+ "este DNI. Intentalo de nuevo");
 					}
-					costumer[costumerSelected].addOrder(newPurchase);
 				}
 				case 4->{
 					System.out.print("Introduce el nombre del articulo: ");
@@ -72,101 +69,80 @@ class MainStore {
 					System.out.print("Introduce el precio del articulo: ");
 					double price = KB.nextDouble();
 					boolean found = false;
-					int costumerSelected = 0;
-					int purchaseSelected = 0;
 					while(!found) {
 						System.out.print("Ahora introduce el codigo del pedido al "
 								+ "que le quieras agregar el articulo: ");
 						int code = KB.nextInt();
 						for(int i = 0 ; i<counterCostumer && !found ; i++)
-							for(int c = 0 ; c<costumer[i].getPurchase().length && !found ; c++)
-								if(costumer[i].getPurchaseAt(c).getCode() == code) {
-									found = true;
-									costumerSelected = i;
-									purchaseSelected = c;
-								}
+							if(costumer[i].searchForOrder(code)) {
+								found = true;
+								costumer[i].getOrderbyCode(code)
+								.addItem(new Item(codeItem++, name, price));;
+							}
 						if(!found)
 							System.err.println("ERROR. No se ha encontrado ningun pedido "
 									+ "con este codigo. Intentalo de nuevo");
 					}
-					costumer[costumerSelected].getPurchaseAt(purchaseSelected)
-					.addItem(new Item(codeItem++, name, price));
 				}
 				case 5->{
+					System.out.print("Introduce la nueva descripcion del pedido: ");
+					String description = KB.nextLine();
 					boolean found = false;
-					int costumerSelected = 0;
-					int purchaseSelected = 0;
 					while(!found) {
 						System.out.print("Introduce el codigo del pedido "
 								+ "que quieras modificar: ");
-						int code = KB.nextInt();	KB.nextLine();
+						int code = KB.nextInt();
 						for(int i = 0 ; i<counterCostumer && !found ; i++)
-							for(int c = 0 ; c<costumer[i].getPurchase().length && !found ; c++)
-								if(costumer[i].getPurchaseAt(c).getCode() == code) {
-									costumerSelected = i;
-									purchaseSelected = c;
-									found = true;
-								}
+							if(costumer[i].searchForOrder(code)) {
+								costumer[i].getOrderbyCode(code)
+								.setDescription(description);
+								found = true;
+							}
 						if(!found)
 							System.err.println("ERROR. No se ha encontrado ningun pedido con "
 									+ "ese codigo. Intentelo de nuevo");
 					}
-					System.out.print("Introduce la nueva descripcion del pedido: ");
-					String description = KB.nextLine();
-					costumer[costumerSelected].getPurchaseAt(purchaseSelected)
-					.setDescription(description);
 				}
 				case 6->{
 					boolean found = false;
-					int costumerSelected = 0;
 					while(!found) {
 						System.out.print("Introduce el DNI del cliente al "
-								+ "que le quieras añadir el pedido: ");
+								+ "que le quieras ver los pedidos: ");
 						String id = KB.nextLine();
 						for(int i = 0 ; i<counterCostumer && !found ; i++)
 							if(costumer[i].getId().contains(id)) {
-								costumerSelected = i;
+								System.out.println("pedidos de "+costumer[i].getName()+": "
+										+costumer[i].allOrdersToString());
 								found = true;
 							}
 						if(!found)
 							System.err.println("ERROR. No existe ningun cliente con "
 									+ "este DNI. Intentalo de nuevo");
 					}
-					System.out.println("pedidos de "+costumer[costumerSelected].getName()+": "
-							+costumer[costumerSelected].allOrdersToString());
 				}
 				case 7->{
 					boolean found = false;
-					int costumerSelected = 0;
-					int purchaseSelected = 0;
-					int productSelected = 0;
 					int code = 0;
 					while(!found) {
-						System.out.print("Ahora introduce el codigo del item "
+						System.out.print("Introduce el codigo del item "
 								+ "que quieras eliminar: ");
 						code = KB.nextInt();
 						for(int i = 0 ; i<counterCostumer && !found ; i++)
-							for(int c = 0 ; c<costumer[i].getPurchase().length && !found ; c++)
-								for(int f = 0 ; f<costumer[i].getPurchaseAt(c)
-										.getProduct().length && !found ; f++)
-									if(costumer[i].getPurchaseAt(c)
-											.getItemAt(f).getCode() == code) {
-										costumerSelected = i;
-										purchaseSelected = c;
-										found = true;
-									}
+							if(costumer[i].searchForItem(code)) {
+								costumer[i].getOrderbyItemCode(code).deleteItem(code);
+								found = true;
+							}
 						if(!found)
 							System.err.println("ERROR. No se ha encontrado ningun item "
 									+ "con este codigo. Intentalo de nuevo");
 					}
-					costumer[costumerSelected].getPurchaseAt(purchaseSelected).deleteItem(code);
 				}
 				case 8->{
 					double bestAmount = 0;
 					int bestCostumer = 0;
 					for(int i = 0 ; i<counterCostumer ; i++)
-						if(costumer[i].bill(tax) > bestAmount) {
-							bestAmount = costumer[i].bill(tax);
+						if(costumer[i].bill() > bestAmount) {
+							bestAmount = costumer[i].bill();
 							bestCostumer = i;
 						}
 					System.out.println("El cliente con la factura mas alta es "
@@ -176,15 +152,18 @@ class MainStore {
 				case 9->{
 					for(int i = 0 ; i<counterCostumer ; i++)
 						for(int c = 0 ; c<costumer[i].getPurchase().length ; c++)
-							System.out.println(costumer[i].getPurchaseAt(c).allItemsToString());
+							for(int f = 0 ; f<costumer[i].getPurchaseAt(c)
+									.getProduct().length ; f++)
+								System.out.println(costumer[i].getPurchaseAt(c).getItemAt(f));
 				}
 				case 10->{
 					for(int i = 0 ; i<counterCostumer ; i++)
-						System.out.println(costumer[i].allOrdersToString());
+						for(int c = 0 ; c<costumer[i].getPurchase().length ; c++)
+							System.out.println(costumer[i].getPurchaseAt(c));
 				}
 				case 11->{
 					for(int i = 0 ; i<counterCostumer ; i++)
-						System.out.println(costumer[i].clientToString());
+						System.out.println(costumer[i]);
 				}
 				case 12->{
 					exit = true;
