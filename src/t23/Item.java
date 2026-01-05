@@ -5,13 +5,14 @@ class Item {
 	private String name;
 	private double price;
 	static double tax;
+	static boolean itemExist;
 	
 	Item(int code, String name, double price){
 		this.code = code;
 		this.name = name;
 		this.price = price;
 	}
-	
+
 	void setCode(int code) {
 		this.code = code;
 	}

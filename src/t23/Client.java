@@ -7,6 +7,7 @@ class Client {
 	private String id;
 	private String name;
 	private Order[] purchase;
+	static boolean clientExist;
 	
 	Client(String id, String name, Order[] purchase) {
 		this.id = id;
@@ -71,7 +72,7 @@ class Client {
 		String total = "";
 		for(int i = 0 ; i<purchase.length ; i++)
 			total += purchase[i]+" -- ";
-		return total;
+		return "Pedidos de "+name+": "+total;
 	}
 	
 	public String toString() {
@@ -113,7 +114,7 @@ class Client {
 		boolean found = false;
 		for(int i = 0 ; i<purchase.length ; i++)
 			for(int c = 0 ; c<purchase[i].getProduct().length ; c++)
-				if(purchase[i].getItemAt(c).getCode() == code)
+				if(purchase[i].getProduct()[c].getCode() == code)
 					found = true;
 		return found;
 	}
@@ -124,9 +125,4 @@ class Client {
 			total += purchase[i].totalCost();
 		return total;
 	}
-	
-	Order getPurchaseAt(int position) {
-		return purchase[position];
-	}
-	
 }

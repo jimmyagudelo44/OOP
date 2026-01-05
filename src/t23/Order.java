@@ -6,6 +6,7 @@ class Order {
 	private int code;
 	private String description;
 	private Item[] product;
+	static boolean orderExist;
 	
 	Order(int code, String description, Item[] product) {
 		this.code = code;
@@ -61,10 +62,6 @@ class Order {
 			product[i] = aux[i];
 	}
 	
-	Item getItemAt(int position) {
-		return product[position];
-	}
-	
 	double totalCost() {
 		double total = 0;
 		for(int i = 0 ; i<product.length ; i++)
@@ -75,8 +72,8 @@ class Order {
 	String allItemsToString() {
 		String total = "";
 		for(int i = 0 ; i<product.length ; i++)
-			total += product[i]+" \\ ";
-		return total;
+			total += product[i]+" -- ";
+		return "productos de el pedido "+description+": "+total;
 	}
 	
 	public String toString() {
