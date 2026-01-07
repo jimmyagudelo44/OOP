@@ -78,24 +78,6 @@ class Container {
 				costumer[i].deleteOrder(code);
 	}
 	
-	static boolean orderArranged() {
-		boolean arranged = true;
-		int scale = 0;
-		for(int i = 0 ; i<purchase.length && arranged ; i++)
-			if(purchase[i].getCode() != scale++)
-				arranged = false;
-		return arranged;
-	}
-	
-	static boolean itemArranged() {
-		boolean arranged = true;
-		int scale = 0;
-		for(int i = 0 ; i<product.length && arranged ; i++)
-			if(product[i].getCode() != scale++)
-				arranged = false;
-		return arranged;
-	}
-	
 	static void arrangeOrder() {
 		boolean found = false;
 		int selected = 0;
@@ -105,16 +87,18 @@ class Container {
 				found = true;
 				selected = i;
 			}
-		found = false;
-		for(int i = 0 ; i<purchase.length ; i++) {
-			if(i == selected)
-				found = true;
-			if(found)
-				purchase[i].setCode(purchase[i].getCode()-1);
+		if(found) {
+			found = false;
+			for(int i = 0 ; i<purchase.length ; i++) {
+				if(i == selected)
+					found = true;
+				if(found)
+					purchase[i].setCode(purchase[i].getCode()-1);
+			}
 		}
 	}
 	
-	static void arrangedItem() {
+	static void arrangeItem() {
 		boolean found = false;
 		int selected = 0;
 		int scale = 0;
@@ -123,12 +107,14 @@ class Container {
 				found = true;
 				selected = i;
 			}
-		found = false;
-		for(int i = 0 ; i<product.length && !found ; i++) {
-			if(i == selected)
-				found = true;
-			if(found)
-				product[i].setCode(product[i].getCode()-1);
+		if(found) {
+			found = false;
+			for(int i = 0 ; i<product.length; i++) {
+				if(i == selected)
+					found = true;
+				if(found)
+					product[i].setCode(product[i].getCode()-1);
+			}
 		}
 	}
 	

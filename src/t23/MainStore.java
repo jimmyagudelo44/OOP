@@ -62,7 +62,7 @@ class MainStore {
 								System.out.print("Introduce el precio del producto: ");
 								double price = KB.nextDouble();	KB.nextLine();
 								Container.increaseItem(new Item(codeItem++, name, price));
-								System.err.println("Nuevo pedido: "+Container.product[Container.product.length-1]);
+								System.err.println("Nuevo producto: "+Container.product[Container.product.length-1]);
 								Item.itemExist = true;
 							}
 							case 4->
@@ -119,8 +119,7 @@ class MainStore {
 								codeOrder--;
 								if(Container.purchase.length == 0)
 									Order.orderExist = false;
-								if(!Container.orderArranged())
-									Container.arrangeOrder();
+								Container.arrangeOrder();
 							}
 							case 3->{
 								int code;
@@ -134,10 +133,11 @@ class MainStore {
 								}while(!Container.itemFound(code));
 								System.err.println("producto eliminado: "+Container.searchItem(code));
 								Container.decreaseItem(code);
+								codeItem--;
 								if(Container.product.length == 0)
 									Item.itemExist = false;
-								if(!Container.itemArranged())
-									Container.arrangedItem();
+								//!!!!ordenamiento de codigos no acabado
+								Container.arrangeItem();
 							}
 							case 4->{
 								System.err.println("IVA eliminado");
@@ -210,8 +210,8 @@ class MainStore {
 								exit = false;
 							}
 							case 2->{
-								int code = -1;
-								while(!Container.orderFound(code)) {
+								int code;
+								do {
 									Interface.allOrders();
 									System.out.print("Introduce el codigo del pedido "
 											+ "que quieras modificar: ");
@@ -219,7 +219,7 @@ class MainStore {
 									if(!Container.orderFound(code))
 										System.err.println("No hay ningun pedido con este "
 												+ "codigo. Intentalo de nuevo");
-								}
+								}while(!Container.orderFound(code));
 								System.err.println("Modificando pedido: "+Container.searchOrder(code));
 								System.out.println("Introduce la nueva descripcion del pedido: ");
 								String description = KB.nextLine();
@@ -227,7 +227,41 @@ class MainStore {
 								System.err.println("Descripcion cambiada: "+Container.searchOrder(code));
 							}
 							case 3->{
-								
+								int code;
+								do {
+									Interface.allItems();
+									System.out.print("Introduce el codigo del Item que quieras modificar: ");
+									code = KB.nextInt();	KB.nextLine();
+									if(!Container.itemFound(code))
+										System.err.println("No se ha encontrado ningun item con este codigo. "
+												+ "Intenalo de nuevo");
+								}while(!Container.itemFound(code));
+								System.err.println("Modificando pedido: "+Container.searchItem(code));
+								while(!exit) {
+									Interface.modifyItem();
+									System.out.print("Selecciona: ");
+									option = Interface.select(KB.nextLine());
+									switch(option) {
+										case 1->{
+											System.out.print("Introduce el nuevo nombre: ");
+											String name = KB.nextLine();
+											Container.searchItem(code).setName(name);
+											System.out.println("Nombre cambiado: "+Container.searchItem(code));
+										}
+										case 2->{
+											System.out.print("Introduce el nuevo precio: ");
+											double price = KB.nextDouble();	KB.nextLine();
+											Container.searchItem(code).setPrice(price);
+											System.out.println("Precio cambiado: "+Container.searchItem(code));
+										}
+										case 3->
+											exit = true;
+										default->
+											System.err.println("ERROR. Esta opcion no esta disponible. "
+													+ "Intentelo de nuevo");
+									}
+								}
+								exit = false;
 							}
 							case 4->{
 								System.out.println("Introduce el nuevo IVA: ");
@@ -256,7 +290,8 @@ class MainStore {
 								boolean inside;
 								do{
 									Interface.allClients();
-									System.out.print("Introduce el DNI del Cliente: ");
+									System.out.print("Introduce el DNI del Cliente al que le quieras vincular "
+											+ "el pedido: ");
 									id = KB.nextLine();
 									inside = false;
 									if(!Container.clientFound(id))
@@ -267,8 +302,8 @@ class MainStore {
 											== Container.purchase.length)
 										inside = true;
 									if(inside)
-										System.err.println("ERROR. Este cliente ya tiene todos "
-												+ "los items de la tienda");
+										System.err.println("Este cliente ya tiene todos "
+												+ "los items existentes vinculados");
 									}
 								}while(!Container.clientFound(id) || inside);
 								int code;
@@ -294,6 +329,31 @@ class MainStore {
 								System.err.println("Pedido con codigo "+Container
 										.searchOrder(code).getCode()+" vinculado a "
 										+Container.searchClient(id).getName());
+							}
+							case 2->{
+								int codePurchase;
+								boolean inside;
+								do {
+									Interface.allOrders();
+									System.out.print("Introduce el codigo del pedido al que le quieras "
+											+ "vincular el producto: ");
+									codePurchase = KB.nextInt();
+									inside = false;
+									if(!Container.orderFound(codePurchase))
+										System.err.println("No hay ningun cliente con este pedido. "
+												+ "Intentalo de nuevo");
+									else {
+										if(Container.searchOrder(codePurchase).getProduct().length 
+												== Container.product.length)
+											inside = true;
+										if(inside)
+											System.err.println("Este pedido ya tiene todos los items "
+													+ "existentes vinculados");
+									}
+								}while(!Container.orderFound(codePurchase) || inside);
+								//!!!sin terminar
+								int codeProduct;
+								boolean coincidence;
 							}
 							case 3->
 								exit = true;

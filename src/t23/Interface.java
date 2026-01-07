@@ -65,6 +65,14 @@ class Interface {
 		System.out.println("3. Salir");
 		System.out.println();
 	}
+	//3.2
+	static void modifyItem() {
+		System.out.println();
+		System.out.println("1. Modificar nombre");
+		System.out.println("2. Modificar precio");
+		System.out.println("3. Salir");
+		System.out.println();
+	}
 	//4
 	static void link() {
 		System.out.println();
@@ -75,7 +83,7 @@ class Interface {
 			System.out.println("1. Vincular Pedido a Cliente");
 		inside = true;
 		if(Item.itemExist && Order.orderExist)
-			Container.allInsideAllProducts();
+			inside = Container.allInsideAllProducts();
 		if(!inside)
 			System.out.println("2. Vincular Producto a Pedido");
 		System.out.println("3. Salir");

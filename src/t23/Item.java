@@ -38,7 +38,7 @@ class Item {
 	}
 
 	public String toString() {
-		return "Item [code=" + code + ", name=" + name + ", price=" + price + "]";
+		return "Item [code=" + code + ", name=" + name + ", price=" + price + "€]";
 	}
 	
 	double cost() {
