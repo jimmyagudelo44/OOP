@@ -12,9 +12,6 @@ class MainStore {
 		Container.purchase = new Order[0];
 		Container.product = new Item[0];
 		Client.clientExist = false;
-		int counterCostumer = 0;
-		int counterPurchase = 0;
-		int counterProduct;
 		Item[] alpha = new Item[0];
 		Item.itemExist = false;
 		Item.tax = 1;
@@ -28,7 +25,6 @@ class MainStore {
 			Interface.mainMenu();
 			System.out.print("Selecciona: ");
 			int option = Interface.select(KB.nextLine());
-			System.out.println();
 			switch(option) {
 				case 1->{
 					while(!exit) {
@@ -47,22 +43,27 @@ class MainStore {
 										System.err.println("ERROR. No puede haber "
 												+ "2 DNIs iguales. Intentalo de nuevo: ");
 								}while(Container.clientFound(id));
-								Container.increaseClient();
-								Container.costumer[counterCostumer] 
-										= new Client(id, name, beta);
-								System.out.println("Nuevo Cliente: "
-										+Container.costumer[counterCostumer++]);
+								Container.increaseClient(new Client(id, name, beta));
+								System.err.println("Nuevo Cliente: "
+										+Container.costumer[Container.costumer.length-1]);
 								Client.clientExist = true;
 							}
 							case 2->{
 								System.out.print("Introduce la descripcion del pedido: ");
 								String description = KB.nextLine();
-								Container.increaseOrder();
-								Container.purchase[counterPurchase] 
-										= new Order(codeOrder++, description, alpha);
-								System.out.println("Nuevo pedido: "
-										+Container.purchase[counterPurchase++]);
+								Container.increaseOrder(new Order(codeOrder++, description, alpha));
+								System.err.println("Nuevo pedido: "
+										+Container.purchase[Container.purchase.length-1]);
 								Order.orderExist = true;
+							}
+							case 3->{
+								System.out.print("Introduce el nombre del producto: ");
+								String name = KB.nextLine();
+								System.out.print("Introduce el precio del producto: ");
+								double price = KB.nextDouble();	KB.nextLine();
+								Container.increaseItem(new Item(codeItem++, name, price));
+								System.err.println("Nuevo pedido: "+Container.product[Container.product.length-1]);
+								Item.itemExist = true;
 							}
 							case 4->
 								exit = true;
@@ -75,7 +76,6 @@ class MainStore {
 										+ "Intentelo de nuevo");
 							}
 						}
-						System.out.println();
 					}
 					exit = false;
 				}
@@ -88,8 +88,7 @@ class MainStore {
 							case 1->{
 								String id;
 								do{
-									for(int i = 0 ; i<counterCostumer ; i++)
-										System.out.println(Container.costumer[i]);
+									Interface.allClients();
 									System.out.print("Introduce el id de la persona que "
 											+ "quieres eliminar: ");
 									id = KB.nextLine();
@@ -101,32 +100,44 @@ class MainStore {
 												+ "DNI. Intentalo de nuevo");
 								}while(!Container.clientFound(id));
 								Container.decreaseClient(id);
-								counterCostumer--;
-								if(counterCostumer==0)
+								if(Container.costumer.length == 0)
 									Client.clientExist = false;
 							}
 							case 2->{
 								int code;
 								do{
-									for(int i = 0 ; i<counterPurchase ; i++)
-										System.out.println(Container.purchase[i]);
+									Interface.allOrders();
 									System.out.print("Introduce el codigo del pedido "
 											+ "que quieras eliminar: ");
 									code = KB.nextInt();	KB.nextLine();
-									if(Container.orderFound(code))
-											System.err.println("Pedido eliminado: "
-													+Container.searchOrder(code));
 									if(!Container.orderFound(code))
 										System.err.println("No hay ningun pedido con este "
 												+ "codigo. Intentalo de nuevo");
 								}while(!Container.orderFound(code));
+								System.err.println("Pedido eliminado: "+Container.searchOrder(code));
 								Container.decreaseOrder(code);
-								counterPurchase--;
 								codeOrder--;
-								if(counterPurchase==0)
+								if(Container.purchase.length == 0)
 									Order.orderExist = false;
 								if(!Container.orderArranged())
 									Container.arrangeOrder();
+							}
+							case 3->{
+								int code;
+								do {
+									Interface.allItems();
+									System.out.print("Introduce el codigo del item que quieras eliminar: ");
+									code = KB.nextInt();	KB.nextLine();
+									if(!Container.itemFound(code))
+										System.err.println("No se ha encontrado ningun item con ese codigo. "
+												+ "Intentalo de nuevo");
+								}while(!Container.itemFound(code));
+								System.err.println("producto eliminado: "+Container.searchItem(code));
+								Container.decreaseItem(code);
+								if(Container.product.length == 0)
+									Item.itemExist = false;
+								if(!Container.itemArranged())
+									Container.arrangedItem();
 							}
 							case 4->{
 								System.err.println("IVA eliminado");
@@ -141,7 +152,6 @@ class MainStore {
 								System.err.println("ERROR. EL VALOR INTRODUCIDO NO ES VALIDO. "
 										+ "Intentelo de nuevo");
 						}
-						System.out.println();
 					}
 					exit = false;
 				}
@@ -154,8 +164,7 @@ class MainStore {
 							case 1->{
 								String id;
 								do{
-									for(int i = 0 ; i<counterCostumer ; i++)
-										System.out.println(Container.costumer[i]);
+									Interface.allClients();
 									System.out.print("Introduce el DNI del cliente al "
 										+ "que quieras modificar: ");
 									id = KB.nextLine();
@@ -197,15 +206,13 @@ class MainStore {
 											System.err.println("ERROR. Esta opcion no esta disponible. "
 													+ "Intentelo de nuevo");
 									}
-									System.out.println();
 								}
 								exit = false;
 							}
 							case 2->{
 								int code = -1;
 								while(!Container.orderFound(code)) {
-									for(int i = 0 ; i<counterPurchase ; i++)
-										System.out.println(Container.purchase[i]);
+									Interface.allOrders();
 									System.out.print("Introduce el codigo del pedido "
 											+ "que quieras modificar: ");
 									code = KB.nextInt();	KB.nextLine();
@@ -235,7 +242,6 @@ class MainStore {
 								System.err.println("ERROR. EL VALOR INTRODUCIDO NO ES VALIDO. "
 										+ "Intentelo de nuevo");
 						}
-						System.out.println();
 					}
 					exit = false;
 				}
@@ -247,20 +253,28 @@ class MainStore {
 						switch(option) {
 							case 1->{
 								String id;
+								boolean inside;
 								do{
-									for(int i = 0 ; i<counterCostumer ; i++)
-										System.out.println(Container.costumer[i]);
+									Interface.allClients();
 									System.out.print("Introduce el DNI del Cliente: ");
 									id = KB.nextLine();
+									inside = false;
 									if(!Container.clientFound(id))
 										System.err.println("ERROR. No se ha encontrado a nadie "
 												+ "con ese DNI. Intentelo de nuevo");
-								}while(!Container.clientFound(id));
+									else {
+									if(Container.searchClient(id).getPurchase().length 
+											== Container.purchase.length)
+										inside = true;
+									if(inside)
+										System.err.println("ERROR. Este cliente ya tiene todos "
+												+ "los items de la tienda");
+									}
+								}while(!Container.clientFound(id) || inside);
 								int code;
 								boolean coincidence;
 								do{
-									for(int i = 0 ; i<counterPurchase ; i++)
-										System.out.println(Container.purchase[i]);
+									Interface.allOrders();
 									System.out.print("Introduce el codigo del pedido "
 											+ "que quieras meter: ");
 									code = KB.nextInt();	KB.nextLine();
@@ -270,16 +284,15 @@ class MainStore {
 									coincidence = false;
 									for(int i = 0 ; i<Container.searchClient(id).getPurchase()
 											.length && !coincidence; i++)
-										if(Container.searchOrder(code) 
-												== Container.searchClient(id).getPurchase()[i])
+										if(Container.searchClient(id).searchForOrder(code))
 											coincidence = true;
 									if(coincidence)
 										System.err.println("Este cliente ya tiene ese pedido. "
 												+ "Intentalo de nuevo");
 								}while(!Container.orderFound(code) || coincidence);
 								Container.searchClient(id).addOrder(Container.searchOrder(code));
-								System.out.println("Pedido con codigo "+Container
-										.searchOrder(code).getCode()+" añadido a "
+								System.err.println("Pedido con codigo "+Container
+										.searchOrder(code).getCode()+" vinculado a "
 										+Container.searchClient(id).getName());
 							}
 							case 3->
@@ -291,7 +304,6 @@ class MainStore {
 								System.err.println("ERROR. EL VALOR INTRODUCIDO NO ES VALIDO. "
 										+ "Intentelo de nuevo");
 						}
-						System.out.println();
 					}
 					exit = false;
 				}
@@ -302,8 +314,24 @@ class MainStore {
 						option = Interface.select(KB.nextLine());
 						switch(option) {
 							case 1->{
-								for(int i = 0 ; i<counterCostumer ; i++)
-									System.out.println(Container.costumer[i]);
+								int code;
+								do {
+									Interface.allOrders();
+									System.out.print("Introduce el codigo del pedido que "
+											+ "quieras desvincular: ");
+									code = KB.nextInt();	KB.nextLine();
+									if(!Container.orderFound(code))
+										System.err.println("No hay ningun codigo con ese pedido. "
+												+ "Intentalo de nuevo");
+								}while(!Container.orderFound(code));
+								String id;
+								do {
+									Interface.allClientWithOrder(code);
+									System.out.print("Introduce el dni del cliente al que le quieres "
+											+ "desvincular este pedido: ");
+									id = KB.nextLine();
+								}while(!Container.clientFound(id));
+								Container.searchClient(id).deleteOrder(code);
 							}
 							case 3->
 								exit = true;
@@ -314,7 +342,6 @@ class MainStore {
 								System.err.println("ERROR. EL VALOR INTRODUCIDO NO ES VALIDO. "
 										+ "Intentelo de nuevo");
 						}
-						System.out.println();
 					}
 					exit = false;
 				}
@@ -325,15 +352,97 @@ class MainStore {
 						option = Interface.select(KB.nextLine());
 						switch(option) {
 							case 1->{
-								for(int i = 0 ; i<counterCostumer ; i++)
-									System.out.println(Container.costumer[i]);
+								while(!exit) {
+									Interface.allClients();
+									Interface.showClients();
+									System.out.print("Selecciona: ");
+									option = Interface.select(KB.nextLine());
+									switch(option) {
+										case 1->{
+											String id;
+											do {
+												System.out.print("Introduce el DNI del cliente al "
+														+ "que le quieras ver sus pedidos: ");
+												id = KB.nextLine();
+												if(!Container.clientFound(id))
+													System.err.println("No hay ningun cliente con "
+															+ "este DNI. Intentalo de nuevo");
+											}while(!Container.clientFound(id));
+											if(Container.searchClient(id).hasOrders()) {
+												System.err.println("Mostrando pedidos de: "
+														+Container.searchClient(id).getName());
+												for(int i = 0 ; i<Container
+														.searchClient(id).getPurchase().length ; i++)
+													System.out.println(Container.searchClient(id)
+															.getPurchase()[i]);
+											}
+											else
+												System.err.println("Este cliente no tiene pedidos");
+										}
+										case 3->
+											exit = true;
+										default->
+											System.err.println("ERROR. Esta opcion no esta disponible. "
+												+ "Intentelo de nuevo");
+										case -1->
+											System.err.println("ERROR. EL VALOR INTRODUCIDO NO ES VALIDO. "
+												+ "Intentelo de nuevo");
+									}
+								}
+								exit = false;
 							}
 							case 2->{
-								for(int i = 0 ; i<counterPurchase ; i++)
-									System.out.println(Container.purchase[i]);
+								while(!exit) {
+									Interface.allOrders();
+									Interface.showOrders();
+									System.out.print("Selecciona: ");
+									option = Interface.select(KB.nextLine());
+									switch(option) {
+										case 1->{
+											int code;
+											do {
+												System.out.print("Introduce el codigo del pedido al que le quieras ver "
+														+ "sus productos");
+												code = KB.nextInt();
+												if(!Container.orderFound(code))
+													System.err.println("No hay ningun pedido con ese codigo. Intentalo de nuevo");
+											}while(!Container.orderFound(code));
+										}
+										case 2->{
+											int code;
+											do {
+												System.out.print("Introduce el codigo del pedido al que le quieras ver "
+														+ "los clientes que lo poseen: ");
+												code = KB.nextInt();	KB.nextLine();
+												if(!Container.orderFound(code))
+													System.err.println("No hay ningun pedido con ese codigo. Intentalo de nuevo");
+											}while(!Container.orderFound(code));
+											System.err.println("Clientes que tienen el pedido con el codigo "
+													+Container.searchOrder(code).getCode());
+											boolean found = false;
+											for(int i = 0 ; i<Container.costumer.length ; i++)
+												if(Container.costumer[i].searchForOrder(code)) {
+													System.out.println(Container.costumer[i]);
+													found = true;
+												}
+											if(!found)
+												System.err.println("Este pedido no esta vinculado a ningun cliente");
+										}
+										case 3->
+											exit = true;
+										default->
+											System.err.println("ERROR. Esta opcion no esta disponible. "
+												+ "Intentelo de nuevo");
+										case -1->
+											System.err.println("ERROR. EL VALOR INTRODUCIDO NO ES VALIDO. "
+												+ "Intentelo de nuevo");
+									}
+								}
+								exit = false;
 							}
 							case 3->{
-								System.out.println(Container.orderArranged());
+								Interface.allItems();
+								Interface.showItems();
 							}
 							case 5->
 								exit = true;
@@ -344,7 +453,6 @@ class MainStore {
 								System.err.println("ERROR. EL VALOR INTRODUCIDO NO ES VALIDO. "
 										+ "Intentelo de nuevo");
 						}
-						System.out.println();
 					}
 					exit = false;
 				}
@@ -360,7 +468,6 @@ class MainStore {
 					System.err.println("ERROR. EL VALOR INTRODUCIDO NO ES VALIDO. "
 							+ "Intentelo de nuevo");
 			}
-			System.out.println();
 		}
 	}
 	

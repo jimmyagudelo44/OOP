@@ -45,4 +45,19 @@ class Item {
 		return price+(price*(tax/100));
 	}
 	
+	boolean itemInsideOrder() {
+		boolean inside = false;
+		for(int i = 0 ; i<Container.purchase.length ; i++)
+			if(Container.purchase[i].OrderHasSpecificItem(code))
+				inside = true;
+		return inside;
+	}
+	
+	boolean itemInsideClient() {
+		boolean inside = false;
+		for(int i = 0 ; i<Container.costumer.length && !inside ; i++)
+			if(Container.costumer[i].searchForItem(code))
+				inside = true;
+		return inside;
+	}
 }

@@ -125,4 +125,11 @@ class Client {
 			total += purchase[i].totalCost();
 		return total;
 	}
+	
+	boolean hasOrders() {
+		if(purchase.length >= 1)
+			return true;
+		else
+			return false;
+	}
 }

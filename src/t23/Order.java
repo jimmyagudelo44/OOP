@@ -81,4 +81,27 @@ class Order {
 				+ ", productos=" + product.length + "]";
 	}
 	
+	boolean hasItems() {
+		if(product.length >= 1)
+			return true;
+		else
+			return false;
+	}
+	
+	boolean OrderHasSpecificItem(int code) {
+		boolean inside = false;
+		for(int i = 0 ; i<product.length && !inside; i++)
+			if(product[i].getCode() == code)
+				inside = true;
+		return inside;
+	}
+	
+	boolean orderInsideClient() {
+		boolean inside = false;
+		for(int i = 0 ; i<Container.costumer.length && !inside ; i++)
+			if(Container.costumer[i].searchForOrder(code))
+				inside = true;
+		return inside;
+	}
+
 }
