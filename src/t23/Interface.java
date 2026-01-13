@@ -2,6 +2,8 @@ package t23;
 
 class Interface {
 	
+	//Esta clase servira para mostrar la interfaz que vera el usuario
+	
 	static void mainMenu() {
 		System.out.println();
 		System.err.println("MENU PRINCIPAL");
@@ -10,7 +12,7 @@ class Interface {
 			System.out.println("2. Eliminar");
 			System.out.println("3. Modificar");
 			if(((Client.clientExist && Order.orderExist) || (Order.orderExist && Item.itemExist)) 
-					&& !(Container.allInsideAllClients() && Container.allInsideAllProducts()))
+					&& !(Container.allInsideAllClients() && Container.allInsideAllOrders()))
 				System.out.println("4. Vincular");
 			if(Container.anyOrder() || Container.anyItem())
 				System.out.println("5. Desvincular");
@@ -83,7 +85,7 @@ class Interface {
 			System.out.println("1. Vincular Pedido a Cliente");
 		inside = true;
 		if(Item.itemExist && Order.orderExist)
-			inside = Container.allInsideAllProducts();
+			inside = Container.allInsideAllOrders();
 		if(!inside)
 			System.out.println("2. Vincular Producto a Pedido");
 		System.out.println("3. Salir");
@@ -92,8 +94,10 @@ class Interface {
 	//5
 	static void unLink() {
 		System.out.println();
-		System.out.println("1. Devincular Pedido a Cliente");
-		System.out.println("2. Desvincular Producto a Pedido");
+		if(Container.anyOrder())
+			System.out.println("1. Devincular Pedido a Cliente");
+		if(Container.anyItem())
+			System.out.println("2. Desvincular Producto a Pedido");
 		System.out.println("3. Salir");
 		System.out.println();
 	}
@@ -135,19 +139,27 @@ class Interface {
 		System.out.println("3. Salir");
 		System.out.println();
 	}
+	
+//	static java.util.Scanner KB = new java.util.Scanner(System.in);
 	/**
-	 * Este metodo solo funciona con numeros menores a 10. Si el valor no es valido devuelve -1
+	 * Este metodo solo funciona con numeros menores a 10
 	 * @param option
-	 * @return
+	 * @return int, que sera el primer caracter escrito, si no es un numero devolvera -1 
 	 */
 	static int select(String option) {
-		int selection = -1;
+//		String selection = KB.nextLine();
+		int selection = -1 ;
 		if(option.charAt(0)>=48 && option.charAt(0)<=57)
 			for(int i = 47 ; i<option.charAt(0) ; i++)
 				selection++;
 		return selection;
 	}
 	
+	/**
+	 * metodo no usado, ni me acuerdo que hacia pero imagino que es pa ver si has puesto un char o no
+	 * @param option
+	 * @return
+	 */
 	static boolean noCharOnSelect(String option) {
 		boolean noChar = true;
 		for(int i = 0 ; i<option.length() && noChar ; i++)
@@ -157,24 +169,117 @@ class Interface {
 	}
 	
 	static void allClients() {
-		for(int i = 0 ; i<Container.costumer.length ; i++)
-			System.out.println(Container.costumer[i]);
+		System.out.println();
+		for(Client c : Container.costumer)
+			System.out.println(c);
+		System.out.println();
+	}
+	
+	/**
+	 * Devuelve prints de clientes que tengan el pedido metido en el parametro
+	 * @param code
+	 */
+	static void allClientWithOrder(int code) {
+		System.out.println();
+		for(Client c : Container.costumer)
+			if(c.searchForOrder(code))
+				System.out.println(c);
+		System.out.println();
+	}
+	
+	/**
+	 * Devuelve prints de clientes que tengan el producto metido en el parametro
+	 * @param code
+	 */
+	static void allClientsWithItem(int code) {
+		System.out.println();
+		for(Client c : Container.costumer)
+			for(Order o : c.getPurchase())
+				if(o.orderHasSpecificItem(code))
+					System.out.println(c);
+		System.out.println();
+	}
+	
+	/**
+	 * devuelve los pedidos de un cliente
+	 * @param id
+	 */
+	static void allOrdersFromClient(String id) {
+		System.out.println();
+		for(int i = 0 ; i<Container.searchClient(id).getPurchase().length ; i++)
+			System.out.println(Container.searchClient(id).getPurchase()[i]);
+		System.out.println();
+	}
+	
+	/**
+	 * devuelve prints de los productos de un cliente
+	 * @param id
+	 */
+	static void allItemsFromClient(String id) {
+		System.out.println();
+		Client c = Container.searchClient(id);
+		for(int i = 0 ; i<c.getPurchase().length ; i++)
+			allItemsFromOrder(c.getPurchase()[i].getCode());
+		System.out.println();
 	}
 	
 	static void allOrders() {
-		for(int i = 0 ; i<Container.purchase.length ; i++)
-			System.out.println(Container.purchase[i]);
+		System.out.println();
+		for(Order o : Container.purchase)
+			System.out.println(o);
+		System.out.println();
+	}
+	
+	/**
+	 * devuelve prints de los pedidos que tengan el item introducido en el parametro
+	 * @param code
+	 */
+	static void allOrdersWithItem(int code) {
+		System.out.println();
+		for(Order o : Container.purchase)
+			if(o.orderHasSpecificItem(code))
+				System.out.println(o);
+		System.out.println();
+	}
+	
+	/**
+	 * devuelve prints de los productos que tenga el pedido introducido en el parametro
+	 * @param code del pedido
+	 */
+	static void allItemsFromOrder(int code) {
+		System.out.println();
+		for(int i = 0 ; i<Container.searchOrder(code).getProduct().length ; i++)
+			System.out.println(Container.searchOrder(code).getProduct()[i]);
+		System.out.println();
+	}
+	
+	/**
+	 * prints de todos los pedidos que esten vinculados a un cliente
+	 */
+	static void ordersInsideAClient() {
+		System.out.println();
+		for(Order o : Container.purchase)
+			if(o.orderInsideClient())
+				System.out.println(o);
+		System.out.println();
 	}
 	
 	static void allItems() {
-		for(int i = 0 ; i<Container.product.length ; i++)
-			System.out.println(Container.product[i]);
+		System.out.println();
+		for(Item i : Container.product)
+			System.out.println(i);
+		System.out.println();
 	}
 	
-	static void allClientWithOrder(int code) {
-		for(int i = 0 ; i<Container.costumer.length ; i++)
-			if(Container.costumer[i].searchForOrder(code))
-				System.out.println(Container.costumer[i]);
+	/**
+	 * prints de todos los pedidos que esten vinculados a un pedido
+	 */
+	static void itemsInsideAnOrder() {
+		System.out.println();
+		for(Item i : Container.product)
+			if(i.itemInsideOrder())
+				System.out.println(i);
+		System.out.println();
 	}
 	
 }

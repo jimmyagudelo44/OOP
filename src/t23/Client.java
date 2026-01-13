@@ -1,7 +1,5 @@
 package t23;
 
-import java.util.Arrays;
-
 class Client {
 	
 	private String id;
@@ -35,16 +33,26 @@ class Client {
 		this.purchase = purchase;
 	}
 	
+	/**
+	 * mete un pedido ampliando +1 la longitud del array 
+	 * @param purchase
+	 */
 	void addOrder(Order purchase) {
 		Order[] aux = new Order[this.purchase.length];
+		
 		for(int i = 0 ; i<this.purchase.length ; i++)
 			aux[i] = this.purchase[i];
 		this.purchase = new Order[aux.length+1];
+		
 		for(int i = 0 ; i<aux.length ; i++)
 			this.purchase[i] = aux[i];
 		this.purchase[this.purchase.length-1] = purchase;
 	}
 	
+	/**
+	 * borra un pedido reduciendo -1 el tamaño del array
+	 * @param code
+	 */
 	void deleteOrder(int code) {
 		int orderSelected = 0;
 		boolean found = false;
@@ -68,6 +76,10 @@ class Client {
 			purchase[i] = aux[i];
 	}
 	
+	/**
+	 * 
+	 * @return print de los pedidos del cliente
+	 */
 	String allOrdersToString() {
 		String total = "";
 		for(int i = 0 ; i<purchase.length ; i++)
@@ -77,14 +89,6 @@ class Client {
 	
 	public String toString() {
 		return "Client [DNI=" + id + ", nombre=" + name + ", pedidos=" + purchase.length + "]";
-	}
-
-	boolean searchForOrder(int code) {
-		boolean found = false;
-		for(int i = 0 ; i<purchase.length && !found ; i++)
-			if(purchase[i].getCode() == code)
-				found = true;
-		return found;
 	}
 	
 	Order getOrderbyCode(int code) {
@@ -110,6 +114,24 @@ class Client {
 		return purchase[orderSelected];
 	}
 	
+	/**
+	 * 
+	 * @param code
+	 * @return si el cliente tiene el pedido true
+	 */
+	boolean searchForOrder(int code) {
+		boolean found = false;
+		for(int i = 0 ; i<purchase.length && !found ; i++)
+			if(purchase[i].getCode() == code)
+				found = true;
+		return found;
+	}
+	
+	/**
+	 * 
+	 * @param code
+	 * @return si el cliente tiene el producto true
+	 */
 	boolean searchForItem(int code) {
 		boolean found = false;
 		for(int i = 0 ; i<purchase.length ; i++)
@@ -126,10 +148,26 @@ class Client {
 		return total;
 	}
 	
+	/**
+	 * 
+	 * @return si el cliente tiene al menos un pedido true
+	 */
 	boolean hasOrders() {
 		if(purchase.length >= 1)
 			return true;
 		else
 			return false;
+	}
+	
+	/**
+	 * si el cliente tiene al menos un producto true
+	 * @return
+	 */
+	boolean hasItems() {
+		boolean has = false;
+		for(Order o : purchase)
+			if(o.hasItems())
+				has = true;
+		return has;
 	}
 }

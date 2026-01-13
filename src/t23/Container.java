@@ -6,6 +6,10 @@ class Container {
 	static Order[] purchase;
 	static Item[] product;
 	
+	/**
+	 * añade un cliente ampliando +1 la longitud del array
+	 * @param c 
+	 */
 	static void increaseClient(Client c) {
 		Client[] aux = costumer;
 		costumer = new Client[aux.length+1];
@@ -14,6 +18,10 @@ class Container {
 		costumer[aux.length] = c;
 	}
 	
+	/**
+	 * añade un producto ampliando +1 la longitud del array
+	 * @param p
+	 */
 	static void increaseItem(Item p) {
 		Item[] aux = product;
 		product = new Item[aux.length+1];
@@ -22,6 +30,10 @@ class Container {
 		product[aux.length] = p;
 	}
 	
+	/**
+	 * añade un pedido ampliando +1 la longitud del array
+	 * @param o
+	 */
 	static void increaseOrder(Order o) {
 		Order[] aux = purchase;
 		purchase = new Order[aux.length+1];
@@ -30,6 +42,10 @@ class Container {
 		purchase[aux.length] = o;
 	}
 	
+	/**
+	 * borra un cliente reduciendo -1 la longitud del array
+	 * @param id
+	 */
 	static void decreaseClient(String id) {
 		Client[] aux = new Client[costumer.length-1];
 		boolean found = false;
@@ -44,6 +60,10 @@ class Container {
 		costumer = aux;
 	}
 	
+	/**
+	 * borra un pedido reduciendo -1 la longitud del array
+	 * @param code
+	 */
 	static void decreaseItem(int code) {
 		Item[] aux = new Item[product.length-1];
 		boolean found = false;
@@ -57,10 +77,14 @@ class Container {
 		}
 		product = aux;
 		for(int i = 0 ; i<purchase.length ; i++)
-			if(purchase[i].OrderHasSpecificItem(code))
+			if(purchase[i].orderHasSpecificItem(code))
 				purchase[i].deleteItem(code);
 	}
 	
+	/**
+	 * borra un pedido reduciendo -1 la longitud del array
+	 * @param code
+	 */
 	static void decreaseOrder(int code){
 		Order[] aux = new Order[purchase.length-1];
 		boolean found = false;
@@ -78,6 +102,10 @@ class Container {
 				costumer[i].deleteOrder(code);
 	}
 	
+	/**
+	 * ordena los codigos de los pedidos para que al momento de añadir otro, 
+	 * ocupe el primer espacio disponible del array
+	 */
 	static void arrangeOrder() {
 		boolean found = false;
 		int selected = 0;
@@ -98,6 +126,10 @@ class Container {
 		}
 	}
 	
+	/**
+	 * ordena los codigos de los productos para que al momento de añadir otro, 
+	 * ocupe el primer espacio disponible del array
+	 */
 	static void arrangeItem() {
 		boolean found = false;
 		int selected = 0;
@@ -118,6 +150,11 @@ class Container {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @return si el cliente existe true
+	 */
 	static boolean clientFound(String id) {
 		boolean found = false;
 		for(int i = 0 ; i<costumer.length ; i++)
@@ -137,6 +174,11 @@ class Container {
 		return selected;
 	}
 	
+	/**
+	 * 
+	 * @param code
+	 * @return si el pedido existe true
+	 */
 	static boolean orderFound(int code) {
 		boolean found = false;
 		for(int i = 0 ; i<purchase.length && !found ; i++)
@@ -156,6 +198,11 @@ class Container {
 		return selected;
 	}
 	
+	/**
+	 * 
+	 * @param code
+	 * @return si el producto existe true
+	 */
 	static boolean itemFound(int code) {
 		boolean found = false;
 		for(int i = 0 ; i<product.length && !found ; i++)
@@ -175,6 +222,10 @@ class Container {
 		return selected;
 	}
 	
+	/**
+	 * 
+	 * @return si todos los clientes tienen todos los pedidos true
+	 */
 	static boolean allInsideAllClients() {
 		boolean inside = true;
 		for(int i = 0 ; i<Container.costumer.length && inside ; i++)
@@ -184,15 +235,23 @@ class Container {
 		return inside;
 	}
 	
-	static boolean allInsideAllProducts() {
+	/**
+	 * 
+	 * @return si todos los pedidos tienen todos los productos true
+	 */
+	static boolean allInsideAllOrders() {
 		boolean inside = true;
-		for(int i = 0 ; i<Container.costumer.length && inside ; i++)
-			for(int c = 0 ; c<Container.purchase.length && inside ; c++)
-				if(!Container.costumer[i].searchForOrder(Container.purchase[c].getCode()))
+		for(int i = 0 ; i<Container.purchase.length && inside ; i++)
+			for(int c = 0 ; c<Container.product.length && inside ; c++)
+				if(!Container.purchase[i].orderHasSpecificItem(Container.product[c].getCode()))
 					inside = false;
 		return inside;
 	}
 
+	/**
+	 * 
+	 * @return si hay al menos un cliente que tenga un pedido true
+	 */
 	static boolean anyOrder() {
 		boolean has = false;
 		for(int i = 0 ; i<costumer.length && !has ; i++)
@@ -201,6 +260,10 @@ class Container {
 		return has;
 	}
 	
+	/**
+	 * 
+	 * @return si hay al menos un pedido que tenga un producto true
+	 */
 	static boolean anyItem() {
 		boolean has = false;
 		for(int i = 0 ; i<purchase.length && !has ; i++)

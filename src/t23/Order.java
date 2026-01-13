@@ -1,7 +1,5 @@
 package t23;
 
-import java.util.Arrays;
-
 class Order {
 	private int code;
 	private String description;
@@ -32,6 +30,10 @@ class Order {
 		this.product = product;
 	}
 	
+	/**
+	 * añade un producto ampliando +1 la longitud del array
+	 * @param product
+	 */
 	void addItem(Item product) {
 		Item[] aux = new Item[this.product.length];
 		for(int i = 0 ; i<this.product.length ; i++)
@@ -42,6 +44,10 @@ class Order {
 		this.product[this.product.length-1] = product;
 	}
 	
+	/**
+	 * borra un producto reduciendo -1 la longitud del array
+	 * @param code
+	 */
 	void deleteItem(int code) {
 		Item[] aux = new Item[product.length-1];
 		int productSelected = 0;
@@ -81,6 +87,10 @@ class Order {
 				+ ", productos=" + product.length + "]";
 	}
 	
+	/**
+	 * 
+	 * @return si el pedido tiene al menos un producto true
+	 */
 	boolean hasItems() {
 		if(product.length >= 1)
 			return true;
@@ -88,7 +98,7 @@ class Order {
 			return false;
 	}
 	
-	boolean OrderHasSpecificItem(int code) {
+	boolean orderHasSpecificItem(int code) {
 		boolean inside = false;
 		for(int i = 0 ; i<product.length && !inside; i++)
 			if(product[i].getCode() == code)
@@ -96,6 +106,10 @@ class Order {
 		return inside;
 	}
 	
+	/**
+	 * 
+	 * @return si hay algun cliente que tenga este pedido true
+	 */
 	boolean orderInsideClient() {
 		boolean inside = false;
 		for(int i = 0 ; i<Container.costumer.length && !inside ; i++)

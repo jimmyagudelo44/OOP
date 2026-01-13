@@ -4,7 +4,7 @@ class Item {
 	private int code;
 	private String name;
 	private double price;
-	static double tax;
+	static double TAX;
 	static boolean itemExist;
 	
 	Item(int code, String name, double price){
@@ -42,17 +42,25 @@ class Item {
 	}
 	
 	double cost() {
-		return price+(price*(tax/100));
+		return price+(price*(TAX/100));
 	}
-	
+
+	/**
+	 * 
+	 * @return si al menos un pedido tiene este producto true
+	 */
 	boolean itemInsideOrder() {
 		boolean inside = false;
-		for(int i = 0 ; i<Container.purchase.length ; i++)
-			if(Container.purchase[i].OrderHasSpecificItem(code))
+		for(int i = 0 ; i<Container.purchase.length && !inside ; i++)
+			if(Container.purchase[i].orderHasSpecificItem(code))
 				inside = true;
 		return inside;
 	}
 	
+	/**
+	 * 
+	 * @return si al menos un cliente tiene este producto true
+	 */
 	boolean itemInsideClient() {
 		boolean inside = false;
 		for(int i = 0 ; i<Container.costumer.length && !inside ; i++)
