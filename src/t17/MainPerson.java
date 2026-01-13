@@ -17,6 +17,7 @@ public class MainPerson {
 			System.out.println("3. Mostrar numero de personas");
 			System.out.println("4. Mostrar todo");
 			System.out.print("Selecciona: ");
+			System.out.println("5. Salir");
 			int option = KB.nextInt();	KB.nextLine();
 			switch(option) {
 				case 1->{
